@@ -8,6 +8,8 @@
 #ifdef WIN32
 #include <windows.h>
 #else
+#include <netinet/ip.h>
+#include <netinet/in_systm.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/ip_icmp.h>

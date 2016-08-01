@@ -29,19 +29,7 @@
 #include <strings.h>
 #include "ping.h"
 #include "os_generic.h"
-#ifdef WIN32
-#include <winsock2.h>
-#define SOL_IP       0
-#define F_SETFL              4
-#define ICMP_ECHO             8
-#define IP_TTL 2
-# define O_NONBLOCK   04000
-void bzero(void *location,__LONG32 count);
-#include <windows.h>
-#include <stdio.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <stdint.h>
+#ifndef icmphdr
 struct icmphdr {
   uint8_t		type;
   uint8_t		code;
@@ -58,12 +46,31 @@ struct icmphdr {
 	} frag;
   } un;
 };
+#endif
+#ifdef WIN32
+#include <winsock2.h>
+#define SOL_IP       0
+#define F_SETFL              4
+#define ICMP_ECHO             8
+#define IP_TTL 2
+# define O_NONBLOCK   04000
+void bzero(void *location,__LONG32 count);
+#include <windows.h>
+#include <stdio.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <stdint.h>
 #else
+#include <netinet/in_systm.h>
+#include <netinet/ip.h>
 #include <sys/socket.h>
 #include <resolv.h>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <netinet/ip_icmp.h>
+#ifndef SOL_IP
+#define SOL_IP IPPROTO_IP
+#endif
 #endif
 #include <stdlib.h>
 
